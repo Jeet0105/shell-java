@@ -12,12 +12,14 @@ class Main {
             String input = br.readLine();
             if (input == null) {
                 break;
-            }
-            if (input.equals("exit")) {
+            } else if (input.equals("exit")) {
                 break;
-            }
-            if (!input.isEmpty()) {
-                System.out.println("You entered: " + input);
+            } else if (input.startsWith("echo ") || input.equals("echo")) {
+                if(input.length() == 4) {
+                    System.out.println();
+                } else {
+                    System.out.println(input.substring(5));
+                }
             }
         }
         br.close();
