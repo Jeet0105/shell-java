@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -6,44 +5,103 @@ import java.io.IOException;
 class Main {
 
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         while (true) {
+
             System.out.print("$: ");
+
             String input = br.readLine();
+
+            // EOF
             if (input == null) {
                 break;
-            } else if (input.equals("exit")) {
+            }
+
+            // exit
+            if (input.equals("exit")) {
                 break;
-            } else if (input.startsWith("echo ") || input.equals("echo")) {
-                if(input.length() == 4) {
+            }
+
+            // echo
+            else if (input.startsWith("echo ") || input.equals("echo")) {
+
+                if (input.equals("echo")) {
                     System.out.println();
                 } else {
                     System.out.println(input.substring(5));
                 }
-            } else if (input.startsWith("type ") || input.equals("type")) {
-                if(input.length() == 4) {
+            }
+
+            // type
+            else if (input.startsWith("type ") || input.equals("type")) {
+
+                if (input.equals("type")) {
                     System.out.println("type: missing argument");
                     continue;
                 }
-                if(!type(input.substring(5))) {
-                    System.out.println(input.substring(5) + " not found");
+
+                String command = input.substring(5);
+
+                if (!type(command)) {
+                    System.out.println(command + ": not found");
                 } else {
-                    System.out.println(input.substring(5) + " is a shell builtin");
+                    System.out.println(command + " is a shell builtin");
                 }
-            } else {
-                System.out.println(input + " not found");
+            }
+
+            // External command
+            else {
+                executeProgram(input);
             }
         }
+
         br.close();
     }
 
     static boolean type(String cmd) {
-        String[] BUILDIN = {"echo", "exit", "type"};
-        for (String b : BUILDIN) {
-            if (cmd.equals(b)) {
+
+        String[] BUILTINS = {
+                "echo",
+                "exit",
+                "type"
+        };
+
+        for (String builtin : BUILTINS) {
+            if (cmd.equals(builtin)) {
                 return true;
             }
         }
+
         return false;
+    }
+
+    static void executeProgram(String cmd) {
+
+        try {
+            ProcessBuilder pb = new ProcessBuilder(cmd.split(" "));
+
+            Process process = pb.start();
+
+            // Read stdout while the process is running
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            // Wait until process finishes
+            process.waitFor();
+
+            reader.close();
+
+        } catch (IOException e) {
+            System.out.println(cmd + ": command not found");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
