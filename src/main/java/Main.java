@@ -26,12 +26,12 @@ class Main {
                     continue;
                 }
                 if(!type(input.substring(5))) {
-                    System.out.println(input.substring(5) + ": not found");
+                    System.out.println(input.substring(5) + " not found");
                 } else {
-                    System.out.println(input.substring(5) + ": is a shell builtin");
+                    System.out.println(input.substring(5) + " is a shell builtin");
                 }
             } else {
-                System.out.println(input + ": not found");
+                System.out.println(input + " not found");
             }
         }
         br.close();
