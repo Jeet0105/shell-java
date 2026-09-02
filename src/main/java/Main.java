@@ -20,8 +20,30 @@ class Main {
                 } else {
                     System.out.println(input.substring(5));
                 }
+            } else if (input.startsWith("type ") || input.equals("type")) {
+                if(input.length() == 4) {
+                    System.out.println("type: missing argument");
+                    continue;
+                }
+                if(!type(input.substring(5))) {
+                    System.out.println(input.substring(5) + ": not found");
+                } else {
+                    System.out.println(input.substring(5) + ": is a shell builtin");
+                }
+            } else {
+                System.out.println(input + ": not found");
             }
         }
         br.close();
+    }
+
+    static boolean type(String cmd) {
+        String[] BUILDIN = {"echo", "exit", "type"};
+        for (String b : BUILDIN) {
+            if (cmd.equals(b)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
