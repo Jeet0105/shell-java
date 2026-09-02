@@ -13,9 +13,13 @@ class Main {
             if (input == null) {
                 break;
             }
+            if (input.equals("exit")) {
+                break;
+            }
             if (!input.isEmpty()) {
                 System.out.println("You entered: " + input);
             }
         }
+        br.close();
     }
 }
